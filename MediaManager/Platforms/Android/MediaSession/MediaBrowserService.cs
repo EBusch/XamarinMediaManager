@@ -124,7 +124,16 @@ namespace MediaManager.Platforms.Android.MediaSession
             NotificationListener.OnNotificationStartedImpl = (notificationId, notification) =>
             {
                 ContextCompat.StartForegroundService(ApplicationContext, new Intent(ApplicationContext, Java.Lang.Class.FromType(typeof(MediaBrowserService))));
-                StartForeground(notificationId, notification);
+
+                if (Build.VERSION.SdkInt >= BuildVersionCodes.S)
+                {
+                    StartForeground(notificationId, notification, ForegroundService.TypeMediaPlayback);
+                }
+                else
+                {
+                    StartForeground(notificationId, notification);
+                }
+
                 IsForeground = true;
             };
             NotificationListener.OnNotificationCancelledImpl = (notificationId, dismissedByUser) =>
